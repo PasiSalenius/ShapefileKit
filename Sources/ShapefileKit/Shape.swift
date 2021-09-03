@@ -93,11 +93,11 @@ public class Shape: NSObject {
     public var z = 0.0
     public var m = [Double?]()
     
-    public var info = [String : Any]()
+    public var info = [String: Any]()
+    
 }
 
 extension Shape: MKOverlay {
-    
     public var coordinate: CLLocationCoordinate2D { return center.coordinate }
     
     public var boundingMapRect: MKMapRect { return boundingBox }

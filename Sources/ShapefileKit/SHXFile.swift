@@ -14,7 +14,7 @@ class SHXFile {
     
     private var fileHandle: FileHandle
     var shapeOffsets = [UInt64]()
-    var shapeCount : Int { return shapeOffsets.count }
+    var shapeCount: Int { return shapeOffsets.count }
     
     init(path: URL) throws {
         self.fileHandle = try FileHandle(forReadingFrom: path)
@@ -50,4 +50,5 @@ class SHXFile {
     deinit {
         self.fileHandle.closeFile()
     }
+    
 }

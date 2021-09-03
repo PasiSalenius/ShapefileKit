@@ -56,7 +56,6 @@ class SHPFile {
     }
     
     func shapeAtOffset(_ offset:UInt64) throws -> Shape? {
-        
         if offset == shpLength { return nil }
         assert(offset < shpLength, "trying to read shape at offset \(offset), but shpLength is only \(shpLength)")
         
@@ -94,7 +93,7 @@ class SHPFile {
         }
         
         shape.coordinates.removeAll()
-        for _ in 0..<nPoints {
+        for _ in 0 ..< nPoints {
             let points = try unpack("<2d", fileHandle.readData(ofLength: 16)).map({ $0 as! Double })
             shape.coordinates.append(CLLocationCoordinate2D(latitude: points[1], longitude: points[0]))
         }
@@ -138,4 +137,5 @@ class SHPFile {
         
         return shape
     }
+    
 }

@@ -54,14 +54,14 @@ class DBFFile {
         return formatter
     }()
     
-    private var fileHandle : FileHandle
+    private var fileHandle: FileHandle
     let numberOfRecords: Int
     let shapeType: Shape.ShapeType
     let lastUpdate: Date
     var fields: [FieldDescriptor]!
     private let headerLength: Int
     private var recordLengthFromHeader: Int
-    private let recordFormat : String!
+    private let recordFormat: String!
     
     init(path: URL) throws {
         self.fileHandle = try FileHandle(forReadingFrom: path)
@@ -112,8 +112,7 @@ class DBFFile {
     }
     
     
-    fileprivate func recordAtOffset(_ offset:UInt64) throws -> DBFRecord {
-        
+    fileprivate func recordAtOffset(_ offset: UInt64) throws -> DBFRecord {
         self.fileHandle.seek(toFileOffset: offset)
         
         guard let recordContents = try! unpack(self.recordFormat, self.fileHandle.readData(ofLength: self.recordLengthFromHeader), .ascii) as? [NSString] else {
@@ -126,10 +125,9 @@ class DBFFile {
         
         assert(self.fields.count == recordContents.count)
         
-        var record : DBFRecord = []
+        var record: DBFRecord = []
         
         for (fields, value) in Array(zip(self.fields, recordContents)) {
-            
             if fields.name == "DeletionFlag" { continue }
             
             let trimmedValue = value.trimmingCharacters(in: CharacterSet.whitespaces)
@@ -139,7 +137,7 @@ class DBFFile {
                 continue
             }
             
-            var v : Any = ""
+            var v: Any = ""
             
             switch fields.type {
             case .numeric: // Numeric, Number stored as a string, right justified, and padded with blanks to the width of the field.
@@ -168,12 +166,11 @@ class DBFFile {
         return record
     }
     
-    subscript(i:Int) -> DBFRecord {
+    subscript(i: Int) -> DBFRecord {
         return try! recordAtIndex(i)
     }
     
-    func recordAtIndex(_ i:Int = 0) throws -> DBFRecord {
-        
+    func recordAtIndex(_ i: Int = 0) throws -> DBFRecord {
         self.fileHandle.seek(toFileOffset: 0)
         assert(headerLength != 0)
         let offset = headerLength + (i * recordLengthFromHeader)
@@ -181,7 +178,6 @@ class DBFFile {
     }
     
     func recordGenerator() throws -> AnyIterator<DBFRecord> {
-        
         if (numberOfRecords == 0) {
             return AnyIterator {
                 print("-- unknown number of records")
@@ -200,8 +196,7 @@ class DBFFile {
     }
     
     func allRecords() throws -> [DBFRecord] {
-        
-        var records : [DBFRecord] = []
+        var records: [DBFRecord] = []
         
         let generator = try self.recordGenerator()
         
@@ -211,4 +206,5 @@ class DBFFile {
         
         return records
     }
+    
 }

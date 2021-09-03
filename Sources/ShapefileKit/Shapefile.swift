@@ -11,9 +11,9 @@ import MapKit
 
 public class Shapefile {
     
-    private let shp : SHPFile
-    private let dbf : DBFFile
-    private let shx : SHXFile
+    private let shp: SHPFile
+    private let dbf: DBFFile
+    private let shx: SHXFile
     
     public var shapeType: Shape.ShapeType { return dbf.shapeType }
     public let fileName: String
@@ -22,7 +22,6 @@ public class Shapefile {
     public var shapes = [Shape]()
     
     public init(path: URL) throws {
-        
         let baseURL = path.deletingPathExtension()
         self.fileName = baseURL.lastPathComponent
         
@@ -36,7 +35,7 @@ public class Shapefile {
     public func loadShapes() {
         guard !isLoaded else { return }
         isLoaded = true
-        for i in 0..<shx.shapeCount {
+        for i in 0 ..< shx.shapeCount {
             do {
                 let shape = try shp.shapeAtOffset(shx.shapeOffsets[i])!
                 let record = try dbf.recordAtIndex(i)
@@ -49,4 +48,5 @@ public class Shapefile {
             }
         }
     }
+    
 }
