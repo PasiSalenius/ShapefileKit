@@ -169,15 +169,14 @@ class DBFFile {
             
             switch fields.type {
             case .numeric: // Numeric, Number stored as a string, right justified, and padded with blanks to the width of the field.
-                if trimmedValue == "" {
-                    v = trimmedValue
-                } else if fields.count > 0 || trimmedValue.contains(".") {
-                    guard let double = Double(trimmedValue) else { throw DBFFileError.parseError }
-                    v = double
-                } else {
-                    guard let int = Int(trimmedValue) else { throw DBFFileError.parseError }
+                if let int = Int(trimmedValue) {
                     v = int
+                } else if let double = Double(trimmedValue) {
+                    v = double
+                } else if trimmedValue.isEmpty {
+                    v = trimmedValue
                 }
+
             case .floating: // Float - since dBASE IV 2.0
                 guard let double = Double(trimmedValue) else { throw DBFFileError.parseError }
                 v = double
