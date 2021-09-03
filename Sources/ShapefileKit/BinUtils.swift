@@ -20,7 +20,6 @@ extension Double: Unpackable {}
 protocol DataConvertible {}
 
 extension DataConvertible {
-    
     init?(data: Data) {
         guard data.count == MemoryLayout<Self>.size else { return nil }
         self = data.withUnsafeBytes { $0.load(as: Self.self) }
@@ -36,20 +35,20 @@ extension DataConvertible {
     }
 }
 
-extension Bool : DataConvertible { }
+extension Bool: DataConvertible { }
 
-extension Int8 : DataConvertible { }
-extension Int16 : DataConvertible { }
-extension Int32 : DataConvertible { }
-extension Int64 : DataConvertible { }
+extension Int8: DataConvertible { }
+extension Int16: DataConvertible { }
+extension Int32: DataConvertible { }
+extension Int64: DataConvertible { }
 
-extension UInt8 : DataConvertible { }
-extension UInt16 : DataConvertible { }
-extension UInt32 : DataConvertible { }
-extension UInt64 : DataConvertible { }
+extension UInt8: DataConvertible { }
+extension UInt16: DataConvertible { }
+extension UInt32: DataConvertible { }
+extension UInt64: DataConvertible { }
 
-extension Float32 : DataConvertible { }
-extension Float64 : DataConvertible { }
+extension Float32: DataConvertible { }
+extension Float64: DataConvertible { }
 
 // MARK: String extension
 extension String {
@@ -106,7 +105,7 @@ public func unhexlify(_ string: String) -> Data? {
 
 func readIntegerType<T: DataConvertible>(_ type: T.Type, bytes: [UInt8], loc: inout Int) -> T {
     let size = MemoryLayout<T>.size
-    let sub = Array(bytes[loc..<(loc+size)])
+    let sub = Array(bytes[loc ..< (loc+size)])
     loc += size
     return T(bytes: sub)!
 }
@@ -160,8 +159,7 @@ func numberOfBytesInFormat(_ format: String) -> Int {
         
         let repeatCount = max(n,1)
         
-        switch(c) {
-            
+        switch c {
         case "@", "<", "=", ">", "!", " ":
             ()
         case "c", "b", "B", "x", "?":
@@ -219,7 +217,7 @@ public func pack(_ format: String, _ objects: [Any], _ stringEncoding: String.En
     
     let firstCharacter = mutableFormat.remove(at: mutableFormat.startIndex)
     
-    switch(firstCharacter) {
+    switch firstCharacter {
     case "<", "=":
         isBigEndian = false
     case ">", "!":
@@ -274,7 +272,7 @@ public func pack(_ format: String, _ objects: [Any], _ stringEncoding: String.En
                 o = objectsQueue.removeFirst()
             }
             
-            switch(c) {
+            switch c {
             case "?":
                 bytes = (o as! Bool) ? [0x01] : [0x00]
             case "c":
@@ -370,8 +368,7 @@ public func unpack(_ format: String, _ data: Data, _ stringEncoding: String.Enco
         for _ in 0..<max(n,1) {
             var o : Unpackable?
             
-            switch(c) {
-                
+            switch c {
             case "c":
                 let optionalString = NSString(bytes: [bytes[loc]], length: 1, encoding: String.Encoding.utf8.rawValue)
                 loc += 1

@@ -13,7 +13,6 @@ import Foundation
 class DBFFile {
     
     struct FieldDescriptor {
-        
         enum FieldType: Character {
             case character = "C"
             case date = "D"
@@ -178,7 +177,7 @@ class DBFFile {
     }
     
     func recordGenerator() throws -> AnyIterator<DBFRecord> {
-        if (numberOfRecords == 0) {
+        if numberOfRecords == 0 {
             return AnyIterator {
                 print("-- unknown number of records")
                 return nil
