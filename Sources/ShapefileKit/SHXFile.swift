@@ -8,6 +8,10 @@
 
 import Foundation
 
+public enum SHXFileError: Error {
+    case typeError
+}
+
 class SHXFile {
 
     static let pathExtension = "shx"
@@ -22,7 +26,7 @@ class SHXFile {
         // read number of records
         fileHandle.seek(toFileOffset: 24)
         let a = try unpack(">i", fileHandle.readData(ofLength: 4))
-        let halfLength = a[0] as! Int
+        guard let halfLength = a[0] as? Int else { throw SHXFileError.typeError }
         let shxRecordLength = (halfLength * 2) - 100
         var numRecords = shxRecordLength / 8
         
@@ -42,7 +46,7 @@ class SHXFile {
         for offset in stride(from: UInt64(100), to: UInt64(100 + 8 * numRecords), by: 8) {
             fileHandle.seek(toFileOffset: offset)
             let b = try unpack(">i", fileHandle.readData(ofLength: 4))
-            let i = UInt64(exactly: b[0] as! Int)!
+            guard let int = b[0] as? Int, let i = UInt64(exactly: int) else { throw SHXFileError.typeError }
             self.shapeOffsets.append(i * 2)
         }
     }
