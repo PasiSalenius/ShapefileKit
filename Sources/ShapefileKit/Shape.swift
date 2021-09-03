@@ -28,27 +28,27 @@ public class Shape: NSObject {
         case multipatch = 31
         
         var hasBoundingBox: Bool {
-            return [ShapeType.polyLine,.polygon,.multipoint,.polylineZ,.polygonZ,.multipointZ,.polylineM,.polygonM,.multipointM,.multipatch].contains(self)
+            return [ShapeType.polyLine, .polygon, .multipoint, .polylineZ, .polygonZ, .multipointZ, .polylineM, .polygonM, .multipointM, .multipatch].contains(self)
         }
         
         var hasParts: Bool {
-            return [ShapeType.polyLine,.polygon,.polylineZ,.polygonZ,.polylineM,.polygonM,.multipatch].contains(self)
+            return [ShapeType.polyLine, .polygon, .polylineZ, .polygonZ, .polylineM, .polygonM, .multipatch].contains(self)
         }
         
         var hasPoints: Bool {
-            return [ShapeType.polyLine,.polygon,.multipoint,.polylineZ,.polygonZ,.polylineM,.polygonM,.multipatch].contains(self)
+            return [ShapeType.polyLine, .polygon, .multipoint, .polylineZ, .polygonZ, .polylineM, .polygonM, .multipatch].contains(self)
         }
         
         var hasZValues: Bool {
-            return [ShapeType.polylineZ,.polygonZ,.multipointZ,.multipatch].contains(self)
+            return [ShapeType.polylineZ, .polygonZ, .multipointZ, .multipatch].contains(self)
         }
         
         var hasMValues: Bool {
-            return [ShapeType.polylineZ,.polygonZ,.multipointZ,.polylineM,.polygonM,.multipointM,.multipatch].contains(self)
+            return [ShapeType.polylineZ, .polygonZ, .multipointZ, .polylineM, .polygonM, .multipointM, .multipatch].contains(self)
         }
         
         var hasSinglePoint: Bool {
-            return [ShapeType.point,.pointZ,.pointM].contains(self)
+            return [ShapeType.point, .pointZ, .pointM].contains(self)
         }
         
         var hasSingleZ: Bool {
@@ -56,11 +56,11 @@ public class Shape: NSObject {
         }
         
         var hasSingleM: Bool {
-            return [ShapeType.pointZ,.pointM].contains(self)
+            return [ShapeType.pointZ, .pointM].contains(self)
         }
     }
     
-    public init(type:ShapeType = .nullShape) {
+    public init(type: ShapeType = .nullShape) {
         self.shapeType = type
     }
     
@@ -69,21 +69,21 @@ public class Shape: NSObject {
     var coordinates = [CLLocationCoordinate2D]()
     public var exteriorCoordinates: [CLLocationCoordinate2D] {
         let count = parts.count > 1 ? parts[1] : coordinates.count
-        return Array(coordinates[0..<count])
+        return Array(coordinates[0 ..< count])
     }
     public var interiorCoordinates: [[CLLocationCoordinate2D]]? {
         guard parts.count > 1 else { return nil }
         var interiorCoordinates = [[CLLocationCoordinate2D]]()
         for (i, startIndex) in parts.enumerated() {
-            if (i == 0) { continue } // skip over the start point index for the external polygon
+            if i == 0 { continue } // skip over the start point index for the external polygon
             let endIndex = i + 1 < parts.count ? parts[i + 1] : coordinates.count
-            interiorCoordinates.append(Array(coordinates[startIndex..<endIndex]))
+            interiorCoordinates.append(Array(coordinates[startIndex ..< endIndex]))
         }
         return interiorCoordinates
     }
     
     public var exteriorPolygon: MKPolygon { return MKPolygon(coordinates: exteriorCoordinates, count: exteriorCoordinates.count) }
-    public var interiorPolygons: [MKPolygon]? { return interiorCoordinates?.map{ MKPolygon(coordinates: $0, count: $0.count) } }
+    public var interiorPolygons: [MKPolygon]? { return interiorCoordinates?.map { MKPolygon(coordinates: $0, count: $0.count) } }
     public var polygon: MKPolygon { return MKPolygon(coordinates: exteriorCoordinates, count: exteriorCoordinates.count, interiorPolygons: interiorPolygons)}
     
     var boundingBox = MKMapRect.null
@@ -102,5 +102,5 @@ extension Shape: MKOverlay {
     
     public var boundingMapRect: MKMapRect { return boundingBox }
     
-    public var title: String? { return info.filter{ $0.value is String }.first?.value as? String }
+    public var title: String? { return info.compactMap { $0.value as? String }.first }
 }
