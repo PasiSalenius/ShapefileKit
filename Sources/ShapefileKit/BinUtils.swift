@@ -12,6 +12,7 @@ import CoreFoundation
 public protocol Unpackable {}
 
 extension NSString: Unpackable {}
+extension String: Unpackable {}
 extension Bool: Unpackable {}
 extension Int: Unpackable {}
 extension Double: Unpackable {}

@@ -9,6 +9,10 @@
 import Foundation
 import MapKit
 
+public enum ShapefileError: Error {
+    case parseError
+}
+
 public class Shapefile {
     
     private let shp: SHPFile
@@ -37,7 +41,7 @@ public class Shapefile {
         isLoaded = true
         for i in 0 ..< shx.shapeCount {
             do {
-                let shape = try shp.shapeAtOffset(shx.shapeOffsets[i])!
+                guard let shape = try shp.shapeAtOffset(shx.shapeOffsets[i]) else { throw ShapefileError.parseError }
                 let record = try dbf.recordAtIndex(i)
                 shape.info = Dictionary.init(uniqueKeysWithValues: zip(dbf.fields.map{$0.name}, record))
                 shapes.append(shape)
