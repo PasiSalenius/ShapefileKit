@@ -79,8 +79,8 @@ class DBFFile {
     private var recordLengthFromHeader: Int
     private let recordFormat: String
     
-    init(path: URL) throws {
-        self.fileHandle = try FileHandle(forReadingFrom: path)
+    init(url: URL) throws {
+        self.fileHandle = try FileHandle(forReadingFrom: url)
         self.fileHandle.seek(toFileOffset: 0)
         
         let a = try unpack("<BBBBIHH20x", self.fileHandle.readData(ofLength: 32))

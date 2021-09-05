@@ -20,8 +20,8 @@ class SHXFile {
     var shapeOffsets = [UInt64]()
     var shapeCount: Int { return shapeOffsets.count }
     
-    init(path: URL) throws {
-        self.fileHandle = try FileHandle(forReadingFrom: path)
+    init(url: URL) throws {
+        self.fileHandle = try FileHandle(forReadingFrom: url)
         
         // read number of records
         fileHandle.seek(toFileOffset: 24)

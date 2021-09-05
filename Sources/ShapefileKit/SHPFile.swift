@@ -24,8 +24,8 @@ class SHPFile {
     private var measure: Range<Double>
     private var shpLength: UInt64
     
-    init(path: URL) throws {
-        self.fileHandle = try FileHandle(forReadingFrom: path)
+    init(url: URL) throws {
+        self.fileHandle = try FileHandle(forReadingFrom: url)
         fileHandle.seek(toFileOffset: 24)
         
         let l = try unpack(">i", fileHandle.readData(ofLength: 4))

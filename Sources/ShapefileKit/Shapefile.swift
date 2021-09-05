@@ -25,13 +25,13 @@ public class Shapefile {
     public var boundingMapRect: MKMapRect { return shp.boundingMapRect }
     public var shapes = [Shape]()
     
-    public init(path: URL) throws {
-        let baseURL = path.deletingPathExtension()
+    public init(url: URL) throws {
+        let baseURL = url.deletingPathExtension()
         self.fileName = baseURL.lastPathComponent
         
-        self.shp = try SHPFile(path: baseURL.appendingPathExtension(SHPFile.pathExtension))
-        self.dbf = try DBFFile(path: baseURL.appendingPathExtension(DBFFile.pathExtension))
-        self.shx = try SHXFile(path: baseURL.appendingPathExtension(SHXFile.pathExtension))
+        self.shp = try SHPFile(url: baseURL.appendingPathExtension(SHPFile.pathExtension))
+        self.dbf = try DBFFile(url: baseURL.appendingPathExtension(DBFFile.pathExtension))
+        self.shx = try SHXFile(url: baseURL.appendingPathExtension(SHXFile.pathExtension))
     }
     
     private var isLoaded = false
