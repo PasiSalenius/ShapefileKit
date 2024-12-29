@@ -207,7 +207,7 @@ public enum BinUtilsError: Error {
     case unsupportedFormat(character: Character)
 }
 
-public func pack(_ format: String, _ objects: [Any], _ stringEncoding: String.Encoding = String.Encoding.windowsCP1252) -> Data {
+public func pack(_ format: String, _ objects: [Any], _ stringEncoding: String.Encoding = String.Encoding.utf8) -> Data {
     var objectsQueue = objects
     
     var mutableFormat = format
@@ -318,7 +318,7 @@ public func pack(_ format: String, _ objects: [Any], _ stringEncoding: String.En
     return mutableData
 }
 
-public func unpack(_ format: String, _ data: Data, _ stringEncoding: String.Encoding = String.Encoding.windowsCP1252) throws -> [Unpackable] {
+public func unpack(_ format: String, _ data: Data, _ stringEncoding: String.Encoding = String.Encoding.utf8) throws -> [Unpackable] {
     assert(CFByteOrderGetCurrent() == 1 /* CFByteOrderLittleEndian */, "\(#file) assumes little endian, but host is big endian")
     
     let isBigEndian = isBigEndianFromMandatoryByteOrderFirstCharacter(format)
@@ -353,9 +353,11 @@ public func unpack(_ format: String, _ data: Data, _ stringEncoding: String.Enco
             let sub = Array(bytes[loc ..< loc+length])
             
             guard let s = NSString(bytes: sub, length: length, encoding: stringEncoding.rawValue) else {
-                assertionFailure("-- not a string: \(sub)")
+                // assertionFailure("-- not a string: \(sub)")
                 return []
             }
+            
+            print("string is \(s)")
             
             a.append(s)
             
