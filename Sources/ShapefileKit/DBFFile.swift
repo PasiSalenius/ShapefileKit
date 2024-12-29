@@ -75,14 +75,17 @@ class DBFFile {
     let lastUpdate: Date
     var fields: [FieldDescriptor]
     
+    private let encoding: String.Encoding
     private let headerLength: Int
     private var recordLengthFromHeader: Int
     private let recordFormat: String
     
-    init(url: URL) throws {
+    init(url: URL, encoding: String.Encoding) throws {
         self.fileHandle = try FileHandle(forReadingFrom: url)
         self.fileHandle.seek(toFileOffset: 0)
-        
+
+        self.encoding = encoding
+
         let a = try unpack("<BBBBIHH20x", self.fileHandle.readData(ofLength: 32))
         guard a.count > 6 else { throw DBFFileError.parseError }
         
@@ -141,7 +144,7 @@ class DBFFile {
     fileprivate func recordAtOffset(_ offset: UInt64) throws -> DBFRecord {
         self.fileHandle.seek(toFileOffset: offset)
         
-        guard let recordContents = try unpack(self.recordFormat, self.fileHandle.readData(ofLength: self.recordLengthFromHeader), .ascii) as? [NSString] else {
+        guard let recordContents = try unpack(self.recordFormat, self.fileHandle.readData(ofLength: self.recordLengthFromHeader), self.encoding) as? [NSString] else {
             print("bad record contents")
             return []
         }

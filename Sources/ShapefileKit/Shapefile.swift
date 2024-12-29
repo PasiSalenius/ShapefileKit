@@ -18,7 +18,8 @@ public class Shapefile {
     private let shp: SHPFile
     private let dbf: DBFFile
     private let shx: SHXFile
-    
+    private let cpg: CPGFile
+
     public var shapeType: Shape.ShapeType { return dbf.shapeType }
     public let fileName: String
     public var lastUpdate: Date { return dbf.lastUpdate }
@@ -29,8 +30,9 @@ public class Shapefile {
         let baseURL = url.deletingPathExtension()
         self.fileName = baseURL.lastPathComponent
         
+        self.cpg = try CPGFile(url: baseURL.appendingPathExtension(CPGFile.pathExtension))
         self.shp = try SHPFile(url: baseURL.appendingPathExtension(SHPFile.pathExtension))
-        self.dbf = try DBFFile(url: baseURL.appendingPathExtension(DBFFile.pathExtension))
+        self.dbf = try DBFFile(url: baseURL.appendingPathExtension(DBFFile.pathExtension), encoding: self.cpg.encoding)
         self.shx = try SHXFile(url: baseURL.appendingPathExtension(SHXFile.pathExtension))
     }
     
