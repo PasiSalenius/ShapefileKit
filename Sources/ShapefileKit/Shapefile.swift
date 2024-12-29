@@ -15,10 +15,10 @@ public enum ShapefileError: Error {
 
 public class Shapefile {
     
+    private let cpg: CPGFile?
     private let shp: SHPFile
     private let dbf: DBFFile
     private let shx: SHXFile
-    private let cpg: CPGFile
 
     public var shapeType: Shape.ShapeType { return dbf.shapeType }
     public let fileName: String
@@ -30,9 +30,10 @@ public class Shapefile {
         let baseURL = url.deletingPathExtension()
         self.fileName = baseURL.lastPathComponent
         
-        self.cpg = try CPGFile(url: baseURL.appendingPathExtension(CPGFile.pathExtension))
+        self.cpg = try? CPGFile(url: baseURL.appendingPathExtension(CPGFile.pathExtension))
+        
         self.shp = try SHPFile(url: baseURL.appendingPathExtension(SHPFile.pathExtension))
-        self.dbf = try DBFFile(url: baseURL.appendingPathExtension(DBFFile.pathExtension), encoding: self.cpg.encoding)
+        self.dbf = try DBFFile(url: baseURL.appendingPathExtension(DBFFile.pathExtension), encoding: self.cpg?.encoding ?? .utf8)
         self.shx = try SHXFile(url: baseURL.appendingPathExtension(SHXFile.pathExtension))
     }
     
