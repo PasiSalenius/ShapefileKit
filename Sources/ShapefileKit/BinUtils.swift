@@ -357,8 +357,6 @@ public func unpack(_ format: String, _ data: Data, _ stringEncoding: String.Enco
                 return []
             }
             
-            print("string is \(s)")
-            
             a.append(s)
             
             loc += length
