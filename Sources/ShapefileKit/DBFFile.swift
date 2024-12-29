@@ -26,8 +26,8 @@ class DBFFile {
             case memo = "M"
         }
         
-        init(data: Data) throws {
-            let fieldDesc = try unpack("<11sc4xBB14x", data)
+        init(data: Data, encoding: String.Encoding) throws {
+            let fieldDesc = try unpack("<11sc4xBB14x", data, encoding)
             
             guard
                 let name = fieldDesc[0] as? String,
@@ -114,7 +114,7 @@ class DBFFile {
         
         self.fields = []
         for _ in 0 ..< numFields {
-            let fieldDesc = try FieldDescriptor(data: self.fileHandle.readData(ofLength: 32))
+            let fieldDesc = try FieldDescriptor(data: self.fileHandle.readData(ofLength: 32), encoding: encoding)
             self.fields.append(fieldDesc)
         }
         
@@ -144,7 +144,7 @@ class DBFFile {
     fileprivate func recordAtOffset(_ offset: UInt64) throws -> DBFRecord {
         self.fileHandle.seek(toFileOffset: offset)
         
-        guard let recordContents = try unpack(self.recordFormat, self.fileHandle.readData(ofLength: self.recordLengthFromHeader), self.encoding) as? [NSString] else {
+        guard let recordContents = try unpack(self.recordFormat, self.fileHandle.readData(ofLength: self.recordLengthFromHeader), .ascii) as? [NSString] else {
             print("bad record contents")
             return []
         }
